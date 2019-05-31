@@ -1,5 +1,6 @@
 require_relative("../db/sql_runner")
 require_relative("customer")
+require_relative("screening")
 
 class Film
 
@@ -52,12 +53,29 @@ class Film
 
   def popular_time
     sql = "SELECT screenings.* FROM screenings INNER JOIN tickets
-    ON screenings.film_id = tickets.film_id
-    WHERE screenings.film_id = $1"
+    ON screenings.ticket_id = tickets.id
+    WHERE tickets.film_id = $1"
     values = [@id]
     screenings_data = SqlRunner.run(sql, values)
     screenings = screenings_data.map{|screening| Screening.new(screening)}
-    return screenings.count
+    show_times = screenings.map{|screening| screening.show_time}
+    frequency_hash = show_times.reduce(Hash.new(0)){|hash, show_time| hash[show_time] += 1; hash}
+
+    max = frequency_hash.values.max
+    return show_times.find_all{|show_time| frequency_hash[show_time] == max}
+
+    # return show_times.max_by{|value| frequency_hash[value]}
+    #
+    # show_times = []
+    # tickets = []
+    # for screening in screenings
+    #   if index = show_times.index(screening.show_time) != nil
+    #     tickets[index] += 1
+    #   else
+    #     show_times.push(screening.show_time)
+    #     tickets.push(1)
+    #   end
+    # end
   end
 
   def self.all
