@@ -4,6 +4,7 @@ require_relative("models/film")
 require_relative("models/ticket")
 
 Ticket.delete_all
+Screening.delete_all
 Customer.delete_all
 Film.delete_all
 
@@ -79,6 +80,24 @@ ticket4 = Ticket.new(
   }
 )
 ticket4.save
+
+screening1 = Screening.new(
+  {
+    "show_time" => "14:00",
+    "film_id" => film1.id,
+    "tickets_available" => 50
+  }
+)
+screening1.save
+
+screening2 = Screening.new(
+  {
+    "show_time" => "18:00",
+    "film_id" => film2.id,
+    "tickets_available" => 40
+  }
+)
+screening2.save
 
 binding.pry
 nil

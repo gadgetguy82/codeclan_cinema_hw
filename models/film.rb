@@ -50,6 +50,16 @@ class Film
     return self.customers.count
   end
 
+  def popular_time
+    sql = "SELECT screenings.* FROM screenings INNER JOIN tickets
+    ON screenings.film_id = tickets.film_id
+    WHERE screenings.film_id = $1"
+    values = [@id]
+    screenings_data = SqlRunner.run(sql, values)
+    screenings = screenings_data.map{|screening| Screening.new(screening)}
+    return screenings.count
+  end
+
   def self.all
     sql = "SELECT * FROM films"
     films = SqlRunner.run(sql)
