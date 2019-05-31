@@ -47,16 +47,24 @@ class Customer
     return films.map{|film| Film.new(film)}
   end
 
-  def buy_ticket(film)
-    generate_ticket = Ticket.new(
-      {
-        "customer_id" => @id,
-        "film_id" => film.id
-      }
-    )
-    generate_ticket.save
-    @funds -= film.price
-    self.update
+  def buy_ticket(film, screening)
+    if screening.tickets_available > 0
+      bought_ticket = Ticket.new(
+        {
+          "customer_id" => @id,
+          "film_id" => film.id
+        }
+      )
+      bought_ticket.save
+      @funds -= film.price
+      screening.ticket_id = bought_ticket.id
+      screening.save
+      screening.tickets_available -= 1
+      screening.update
+      self.update
+    else
+      p "Sold out, no more tickets available for #{film.title} screening at #{screening.show_time}"
+    end
   end
 
   def num_of_tickets_bought

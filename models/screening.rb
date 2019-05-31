@@ -3,12 +3,12 @@ require_relative("../db/sql_runner")
 class Screening
 
   attr_reader :id
-  attr_reader :show_time, :tickets_available, :ticket_id
+  attr_accessor :show_time, :tickets_available, :ticket_id
 
   def initialize(options)
     @show_time = options["show_time"]
     @tickets_available = options["tickets_available"].to_i
-    @ticket_id = options["ticket_id"].to_i
+    @ticket_id = options["ticket_id"].to_i if options["ticket_id"]
     @id = options["id"].to_i if options["id"]
   end
 

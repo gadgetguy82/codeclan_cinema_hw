@@ -59,82 +59,28 @@ film3 = Film.new(
 )
 film3.save
 
-ticket1 = Ticket.new(
-  {
-    "customer_id" => customer1.id,
-    "film_id" => film1.id
-  }
-)
-ticket1.save
-ticket2 = Ticket.new(
-  {
-    "customer_id" => customer2.id,
-    "film_id" => film2.id
-  }
-)
-ticket2.save
-ticket3 = Ticket.new(
-  {
-    "customer_id" => customer3.id,
-    "film_id" => film2.id
-  }
-)
-ticket3.save
-ticket4 = Ticket.new(
-  {
-    "customer_id" => customer1.id,
-    "film_id" => film2.id
-  }
-)
-ticket4.save
-ticket5 = Ticket.new(
-  {
-    "customer_id" => customer4.id,
-    "film_id" => film2.id
-  }
-)
-ticket5.save
-
 screening1 = Screening.new(
   {
     "show_time" => "14:00",
-    "tickets_available" => 50,
-    "ticket_id" => ticket1.id
+    "tickets_available" => 5
   }
 )
 screening1.save
 screening2 = Screening.new(
   {
     "show_time" => "18:00",
-    "tickets_available" => 40,
-    "ticket_id" => ticket2.id
+    "tickets_available" => 4
   }
 )
 screening2.save
-screening3 = Screening.new(
-  {
-    "show_time" => "18:00",
-    "tickets_available" => 40,
-    "ticket_id" => ticket3.id
-  }
-)
-screening3.save
-screening4 = Screening.new(
-  {
-    "show_time" => "16:00",
-    "tickets_available" => 40,
-    "ticket_id" => ticket4.id
-  }
-)
-screening4.save
-screening5 = Screening.new(
-  {
-    "show_time" => "16:00",
-    "tickets_available" => 40,
-    "ticket_id" => ticket5.id
-  }
-)
-screening5.save
+
+customer1.buy_ticket(film1, screening1)
+customer2.buy_ticket(film2, screening1)
+customer1.buy_ticket(film2, screening2)
+customer1.buy_ticket(film2, screening2)
+customer2.buy_ticket(film2, screening2)
+customer3.buy_ticket(film2, screening2)
+customer4.buy_ticket(film2, screening2)
 
 binding.pry
 nil
