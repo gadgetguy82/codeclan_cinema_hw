@@ -43,6 +43,13 @@ class Ticket
     return tickets.map{|ticket| Ticket.new(ticket)}
   end
 
+  def self.find(id)
+    sql = "SELECT * FROM tickets WHERE id = $1"
+    values = [id]
+    ticket = SqlRunner.run(sql, values)[0]
+    return Ticket.new(ticket)
+  end
+
   def self.delete_all
     sql = "DELETE FROM tickets"
     SqlRunner.run(sql)

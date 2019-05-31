@@ -58,13 +58,27 @@ class Film
     values = [@id]
     screenings_data = SqlRunner.run(sql, values)
     screenings = screenings_data.map{|screening| Screening.new(screening)}
+
+    # -------------------------------------------------------------
+    # This way will return multiple popular times
     show_times = screenings.map{|screening| screening.show_time}
-    frequency_hash = show_times.reduce(Hash.new(0)){|hash, show_time| hash[show_time] += 1; hash}
-
+    frequency_hash = show_times.reduce(Hash.new(0)){
+      |hash, show_time| hash[show_time] += 1; hash}
     max = frequency_hash.values.max
-    return show_times.find_all{|show_time| frequency_hash[show_time] == max}
-
+    return (frequency_hash.find_all{
+      |show_time, frequency| frequency == max}).map{
+        |show_time, frequency| show_time}
+    # -------------------------------------------------------------
+    # Another way to extract the most popular screening time
+    # Again only extracts the first popular time found
+    #
+    # show_times = screenings.map{|screening| screening.show_time}
+    # frequency_hash = show_times.reduce(Hash.new(0)){
+    #   |hash, show_time| hash[show_time] += 1; hash}
     # return show_times.max_by{|value| frequency_hash[value]}
+    # -------------------------------------------------------------
+    # One way to extract the most popular screening time for this
+    # film, only returns the first popular time if multiples exist
     #
     # show_times = []
     # tickets = []
@@ -76,12 +90,20 @@ class Film
     #     tickets.push(1)
     #   end
     # end
+    # return show_times[tickets[tickets.max]]
   end
 
   def self.all
     sql = "SELECT * FROM films"
     films = SqlRunner.run(sql)
     return films.map{|film| Film.new(film)}
+  end
+
+  def self.find(id)
+    sql = "SELECT * FROM films WHERE id = $1"
+    values = [id]
+    film = SqlRunner.run(sql, values)[0]
+    return Film.new(film)
   end
 
   def self.delete_all
