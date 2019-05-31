@@ -2,7 +2,7 @@ require("pg")
 
 class SqlRunner
 
-  def run(sql, values = [])
+  def self.run(sql, values = [])
     begin
       db = PG.connect({dbname: "cinema", host: "localhost"})
       db.prepare("query", sql)
@@ -13,4 +13,4 @@ class SqlRunner
     return result
   end
 
-  end
+end
