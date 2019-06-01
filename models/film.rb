@@ -5,31 +5,32 @@ require_relative("screening")
 class Film
 
   attr_reader :id
-  attr_accessor :title, :price
+  attr_accessor :title, :price, :duration
 
   def initialize(options)
     @title = options["title"]
-    @price = options["price"].to_i
+    @price = options["price"].to_i if options["price"]
+    @duration = options["duration"]
     @id = options["id"].to_i if options["id"]
   end
 
   def save
     sql = "INSERT INTO films (
-      title, price
+      title, price, duration
     ) VALUES (
-      $1, $2
+      $1, $2, $3
     ) RETURNING *"
-    values = [@title, @price]
+    values = [@title, @price, @duration]
     @id = SqlRunner.run(sql, values)[0]["id"].to_i
   end
 
   def update
     sql = "UPDATE films SET (
-      title, price
+      title, price, duration
     ) = (
-      $1, $2
-    ) WHERE id = $3"
-    values = [@title, @price, @id]
+      $1, $2, $3
+    ) WHERE id = $4"
+    values = [@title, @price, @duration, @id]
     SqlRunner.run(sql, values)
   end
 
@@ -53,8 +54,8 @@ class Film
 
   def popular_time
     sql = "SELECT screenings.* FROM screenings INNER JOIN tickets
-    ON screenings.ticket_id = tickets.id
-    WHERE tickets.film_id = $1"
+    ON screenings.id = tickets.screening_id
+    WHERE screenings.film_id = $1"
     values = [@id]
     screenings_data = SqlRunner.run(sql, values)
     screenings = screenings_data.map{|screening| Screening.new(screening)}
