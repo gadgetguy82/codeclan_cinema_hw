@@ -49,15 +49,15 @@ class Customer
 
   def buy_ticket(screening)
     film = Film.find(screening.film_id)
-    if screening.tickets_available > 0
-      bought_ticket = Ticket.new(
+    if screening.tickets_available > 0 && @funds >= film.price
+      ticket = Ticket.new(
         {
           "customer_id" => @id,
           "film_id" => screening.film_id,
           "screening_id" => screening.id
         }
       )
-      bought_ticket.save
+      ticket.save
       screening.tickets_available -= 1
       screening.update
       @funds -= film.price

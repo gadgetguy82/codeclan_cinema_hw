@@ -11,8 +11,8 @@ Ticket.delete_all
 Screening.delete_all
 Seat.delete_all
 Auditorium.delete_all
-Customer.delete_all
 Film.delete_all
+Customer.delete_all
 
 odeon = Theatre.new(
   {
@@ -25,7 +25,14 @@ odeon.add_auditorium("Screen 2")
 
 odeon.add_film("Jurassic Park", "1 hour")
 odeon.add_film("Robocop", "2 hours")
-odeon.add_film("Terminator 2" "2 hours")
+odeon.add_film("Terminator 2", "2 hours")
+
+odeon.set_price(Film.all[0], 10)
+odeon.set_price(Film.all[0], 8)
+odeon.set_price(Film.all[0], 15)
+
+odeon.add_screening("14:00", Auditorium.all[0], Film.all[0])
+odeon.add_screening("18:00", Auditorium.all[0], Film.all[1])
 
 customer1 = Customer.new(
   {
@@ -56,30 +63,13 @@ customer4 = Customer.new(
 )
 customer4.save
 
-screening1 = Screening.new(
-  {
-    "show_time" => "14:00",
-    "tickets_available" => 5,
-    "film_id" => film1.id
-  }
-)
-screening1.save
-screening2 = Screening.new(
-  {
-    "show_time" => "18:00",
-    "tickets_available" => 4,
-    "film_id" => film1.id
-  }
-)
-screening2.save
-
-customer1.buy_ticket(screening1)
-customer2.buy_ticket(screening1)
-customer1.buy_ticket(screening2)
-customer1.buy_ticket(screening2)
-customer2.buy_ticket(screening2)
-customer3.buy_ticket(screening2)
-customer4.buy_ticket(screening2)
+customer1.buy_ticket(Screening.all[0])
+customer2.buy_ticket(Screening.all[0])
+customer1.buy_ticket(Screening.all[1])
+customer1.buy_ticket(Screening.all[1])
+customer2.buy_ticket(Screening.all[1])
+customer3.buy_ticket(Screening.all[1])
+customer4.buy_ticket(Screening.all[1])
 
 binding.pry
 nil
