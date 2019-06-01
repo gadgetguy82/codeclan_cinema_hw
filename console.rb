@@ -1,5 +1,6 @@
 require("pry")
 require_relative("theatre")
+require_relative("customer_list")
 require_relative("models/customer")
 require_relative("models/film")
 require_relative("models/ticket")
@@ -27,49 +28,22 @@ odeon.add_film("Jurassic Park", "1 hour")
 odeon.add_film("Robocop", "2 hours")
 odeon.add_film("Terminator 2", "2 hours")
 
-odeon.set_price(Film.all[0], 10)
-odeon.set_price(Film.all[0], 8)
-odeon.set_price(Film.all[0], 15)
+odeon.set_price(Film.find_by_title("Jurassic Park"), 10)
+odeon.set_price(Film.find_by_title("Robocop"), 8)
+odeon.set_price(Film.find_by_title("Terminator 2"), 15)
 
-odeon.add_screening("14:00", Auditorium.all[0], Film.all[0])
-odeon.add_screening("18:00", Auditorium.all[0], Film.all[1])
+odeon.add_screening("14:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Jurassic Park"))
+odeon.add_screening("18:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Robocop"))
 
-customer1 = Customer.new(
-  {
-    "name" => "Robert",
-    "funds" => 100
-  }
-)
-customer1.save
-customer2 = Customer.new(
-  {
-    "name" => "Greg",
-    "funds" => 200
-  }
-)
-customer2.save
-customer3 = Customer.new(
-  {
-    "name" => "Peter",
-    "funds" => 300
-  }
-)
-customer3.save
-customer4 = Customer.new(
-  {
-    "name" => "Imogen",
-    "funds" => 50
-  }
-)
-customer4.save
+customers = CustomerList.new(10).customers
 
-customer1.buy_ticket(Screening.all[0])
-customer2.buy_ticket(Screening.all[0])
-customer1.buy_ticket(Screening.all[1])
-customer1.buy_ticket(Screening.all[1])
-customer2.buy_ticket(Screening.all[1])
-customer3.buy_ticket(Screening.all[1])
-customer4.buy_ticket(Screening.all[1])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[0])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[0])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
+customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
 
 binding.pry
 nil

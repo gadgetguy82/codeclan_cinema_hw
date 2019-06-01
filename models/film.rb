@@ -107,6 +107,13 @@ class Film
     return Film.new(film)
   end
 
+  def self.find_by_title(title)
+    sql = "SELECT * FROM films WHERE title = $1"
+    values = [title]
+    film = SqlRunner.run(sql, values)[0]
+    return Film.new(film)
+  end
+
   def self.delete_all
     sql = "DELETE FROM films"
     SqlRunner.run(sql)

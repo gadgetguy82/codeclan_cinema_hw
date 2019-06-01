@@ -84,6 +84,13 @@ class Auditorium
     return Auditorium.new(auditorium)
   end
 
+  def self.find_by_name(name)
+    sql = "SELECT * FROM auditoriums WHERE name = $1"
+    values = [name]
+    auditorium = SqlRunner.run(sql, values)[0]
+    return Auditorium.new(auditorium)
+  end
+
   def self.delete_all
     sql = "DELETE FROM auditoriums"
     SqlRunner.run(sql)
