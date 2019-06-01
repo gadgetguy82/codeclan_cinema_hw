@@ -1,4 +1,5 @@
 require_relative("../db/sql_runner")
+require_relative("seat")
 
 class Screening
 
@@ -39,10 +40,28 @@ class Screening
     SqlRunner.run(sql, values)
   end
 
+  def seats
+    sql = "SELECT seats.* FROM seats INNER JOIN auditoriums
+    ON seats.auditorium_id = auditoriums.id WHERE auditoriums.id = $1"
+    values = [@auditorium_id]
+    seats = SqlRunner.run(sql, values)
+    return seats.map{|seat| Seat.new(seat)}
+  end
+
+  def free_seats
+    free_seats = self.seats.find_all{|seat| seat.reserved == "f"}
+    return free_seats
+  end
+
+  def reserved_seats
+    reserved_seats = self.seats.find_all{|seat| seat.reserved == "t"}
+    return reserved_seats
+  end
+
   def self.all
     sql = "SELECT * FROM screenings"
     screenings = SqlRunner.run(sql)
-    return Screening.map_items(screenings)
+    return Screening.map_screenings(screenings)
   end
 
   def self.find(id)
@@ -56,7 +75,7 @@ class Screening
     sql = "SELECT * FROM screenings WHERE show_time = $1 AND auditorium_id = $2"
     values = [show_time, auditorium_id]
     screenings = SqlRunner.run(sql, values)
-    if Screening.map_items(screenings) != []
+    if Screening.map_screenings(screenings) != []
       return true
     else
       return false
@@ -68,7 +87,7 @@ class Screening
     SqlRunner.run(sql)
   end
 
-  def self.map_items(data)
+  def self.map_screenings(data)
     return data.map{|screening| Screening.new(screening)}
   end
 

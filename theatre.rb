@@ -52,8 +52,12 @@ class Theatre
       )
       screening.save
     else
-      p "Cannot add screening, #{auditorium.name} already in use"
+      p "Cannot add screening, #{auditorium.name} already booked"
     end
+  end
+
+  def self.select_random(array)
+    return array[rand(array.length - 1)]
   end
 
 end

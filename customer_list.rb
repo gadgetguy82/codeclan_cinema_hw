@@ -7,7 +7,7 @@ class CustomerList
     last_names = ["Anderson", "Bailey", "Christie", "Dyer", "Egerton", "Fogel", "Glass", "Henley", "Innes"]
     @customer_list = []
     @names_list = []
-    (length - 1).times {
+    length.times {
       @names_list.push(first_names[rand(first_names.length)] + " " + last_names[rand(last_names.length)])
     }
   end

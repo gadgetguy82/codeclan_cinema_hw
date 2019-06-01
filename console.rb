@@ -24,26 +24,24 @@ odeon = Theatre.new(
 odeon.add_auditorium("Screen 1")
 odeon.add_auditorium("Screen 2")
 
-odeon.add_film("Jurassic Park", "1 hour")
-odeon.add_film("Robocop", "2 hours")
-odeon.add_film("Terminator 2", "2 hours")
+odeon.add_film("Jurassic Park", "1 hour", 5 + rand(10))
+odeon.add_film("Robocop", "2 hours", 5 + rand(10))
+odeon.add_film("Terminator 2", "2 hours", 5 + rand(10))
 
 odeon.set_price(Film.find_by_title("Jurassic Park"), 10)
-odeon.set_price(Film.find_by_title("Robocop"), 8)
-odeon.set_price(Film.find_by_title("Terminator 2"), 15)
 
 odeon.add_screening("14:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Jurassic Park"))
 odeon.add_screening("18:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Robocop"))
+odeon.add_screening("18:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Terminator 2"))
 
 customers = CustomerList.new(10).customers
 
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[0])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[0])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
-customers[rand(customers.length - 1)].buy_ticket(Screening.all[1])
+(10 + rand(10)).times {
+  screening = Theatre.select_random(Screening.all)
+  seat = Theatre.select_random(screening.free_seats)
+  customer = Theatre.select_random(customers)
+  customer.buy_ticket(screening, seat)
+}
 
 binding.pry
 nil

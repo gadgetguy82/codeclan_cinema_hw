@@ -3,32 +3,33 @@ require_relative("../db/sql_runner")
 class Seat
 
   attr_reader :id
-  attr_accessor :row, :seat_number, :auditorium_id
+  attr_accessor :row, :seat_number, :auditorium_id, :reserved
 
   def initialize(options)
     @row = options["row"]
     @seat_number = options["seat_number"].to_i
     @auditorium_id = options["auditorium_id"].to_i if options["auditorium_id"]
+    @reserved = options["reserved"]
     @id = options["id"].to_i if options["id"]
   end
 
   def save
     sql = "INSERT INTO seats (
-      row, seat_number, auditorium_id
+      row, seat_number, auditorium_id, reserved
     ) VALUES (
-      $1, $2, $3
+      $1, $2, $3, $4
     ) RETURNING *"
-    values = [@row, @seat_number, @auditorium_id]
+    values = [@row, @seat_number, @auditorium_id, @reserved]
     @id = SqlRunner.run(sql, values)[0]["id"].to_i
   end
 
   def update
     sql = "UPDATE seats SET (
-      row, seat_number, auditorium_id
+      row, seat_number, auditorium_id, reserved
     ) = (
-      $1, $2, $3
-    ) WHERE id = $4"
-    values = [@row, @seat_number, @auditorium_id, @id]
+      $1, $2, $3, $4
+    ) WHERE id = $5"
+    values = [@row, @seat_number, @auditorium_id, @reserved, @id]
     SqlRunner.run(sql, values)
   end
 
@@ -41,7 +42,7 @@ class Seat
   def self.all
     sql = "SELECT * FROM seats"
     seats = SqlRunner.run(sql)
-    return seats.map{|auditorium| Seat.new(auditorium)}
+    return self.map_items(seats)
   end
 
   def self.find(id)
@@ -54,6 +55,10 @@ class Seat
   def self.delete_all
     sql = "DELETE FROM seats"
     SqlRunner.run(sql)
+  end
+
+  def self.map_items(data)
+    return data.map{|seat| Seat.new(seat)}
   end
 
 end

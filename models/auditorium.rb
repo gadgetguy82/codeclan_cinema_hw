@@ -54,7 +54,8 @@ class Auditorium
           {
             "row" => letter[row],
             "seat_number" => num,
-            "auditorium_id" => @id
+            "auditorium_id" => @id,
+            "reserved" => false
           }
         )
         seat.save

@@ -36,7 +36,8 @@ CREATE TABLE seats (
   id SERIAL8 PRIMARY KEY,
   row VARCHAR(255),
   seat_number INT4,
-  auditorium_id INT8 REFERENCES auditoriums(id) ON DELETE CASCADE
+  auditorium_id INT8 REFERENCES auditoriums(id) ON DELETE CASCADE,
+  reserved BOOLEAN
 );
 
 CREATE TABLE screenings (
@@ -51,5 +52,6 @@ CREATE TABLE tickets (
   id SERIAL8 PRIMARY KEY,
   customer_id INT8 REFERENCES customers(id) ON DELETE CASCADE,
   film_id INT8 REFERENCES films(id) ON DELETE CASCADE,
-  screening_id INT8 REFERENCES screenings(id) ON DELETE CASCADE
+  screening_id INT8 REFERENCES screenings(id) ON DELETE CASCADE,
+  seat_id INT8 REFERENCES seats(id) ON DELETE CASCADE
 );

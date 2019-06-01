@@ -52,7 +52,7 @@ class Film
     return self.customers.count
   end
 
-  def popular_time
+  def popular_show_time
     sql = "SELECT screenings.* FROM screenings INNER JOIN tickets
     ON screenings.id = tickets.screening_id
     WHERE screenings.film_id = $1"

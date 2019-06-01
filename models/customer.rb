@@ -47,7 +47,7 @@ class Customer
     return films.map{|film| Film.new(film)}
   end
 
-  def buy_ticket(screening)
+  def buy_ticket(screening, seat)
     film = Film.find(screening.film_id)
     if screening.tickets_available > 0
       if @funds >= film.price
@@ -55,10 +55,13 @@ class Customer
           {
             "customer_id" => @id,
             "film_id" => screening.film_id,
-            "screening_id" => screening.id
+            "screening_id" => screening.id,
+            "seat_id" => seat.id
           }
         )
         ticket.save
+        seat.reserved = true
+        seat.update
         screening.tickets_available -= 1
         screening.update
         @funds -= film.price
@@ -73,6 +76,17 @@ class Customer
 
   def total_tickets_bought
     return self.films.count
+  end
+
+  def favourite_film
+    film_list = self.films.map{|film| film.title}
+    frequency_hash = film_list.reduce(Hash.new(0)){
+      |hash, title| hash[title] += 1; hash
+    }
+    max = frequency_hash.values.max
+    return (frequency_hash.find_all{
+      |title, frequency| frequency == max}).map{
+        |title, frequency| title}
   end
 
   def self.all
