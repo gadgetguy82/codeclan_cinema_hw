@@ -48,8 +48,8 @@ class Seat
   def self.find(id)
     sql = "SELECT * FROM seats WHERE id = $1"
     values = [@id]
-    auditorium = SqlRunner.run(sql, values)
-    return Seat.new(auditorium)
+    seat = SqlRunner.run(sql, values)
+    return Seat.new(seat)
   end
 
   def self.delete_all

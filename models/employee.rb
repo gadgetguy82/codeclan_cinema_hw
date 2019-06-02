@@ -14,7 +14,7 @@ class Employee
   end
 
   def save
-    sql = "INSERT INTO seats (
+    sql = "INSERT INTO employees (
       name, password, access_level, theatre_id
     ) VALUES (
       $1, $2, $3, $4
@@ -24,7 +24,7 @@ class Employee
   end
 
   def update
-    sql = "UPDATE seats SET (
+    sql = "UPDATE employees SET (
       name, password, access_level, theatre_id
     ) = (
       $1, $2, $3, $4
@@ -34,26 +34,26 @@ class Employee
   end
 
   def delete
-    sql = "DELETE FROM seats WHERE id = $1"
+    sql = "DELETE FROM employees WHERE id = $1"
     values = [@id]
     SqlRunner.run(sql, values)
   end
 
   def self.all
-    sql = "SELECT * FROM seats"
-    seats = SqlRunner.run(sql)
-    return seats.map{|auditorium| Seat.new(auditorium)}
+    sql = "SELECT * FROM employees"
+    employees = SqlRunner.run(sql)
+    return employees.map{|employee| Employee.new(employee)}
   end
 
   def self.find(id)
-    sql = "SELECT * FROM seats WHERE id = $1"
+    sql = "SELECT * FROM employees WHERE id = $1"
     values = [@id]
-    auditorium = SqlRunner.run(sql, values)
-    return Seat.new(auditorium)
+    employee = SqlRunner.run(sql, values)
+    return Employee.new(employee)
   end
 
   def self.delete_all
-    sql = "DELETE FROM seats"
+    sql = "DELETE FROM employees"
     SqlRunner.run(sql)
   end
 
