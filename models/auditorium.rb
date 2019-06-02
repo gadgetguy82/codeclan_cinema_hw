@@ -10,26 +10,27 @@ class Auditorium
     @name = options["name"]
     @total_seats = options["total_seats"]
     @total_rows = options["total_rows"]
+    @theatre_id = options["theatre_id"].to_i
     @id = options["id"].to_i if options["id"]
   end
 
   def save
     sql = "INSERT INTO auditoriums (
-      name, total_seats, total_rows
+      name, total_seats, total_rows, theatre_id
     ) VALUES (
-      $1, $2, $3
+      $1, $2, $3, $4
     ) RETURNING *"
-    values = [@name, @total_seats, @total_rows]
+    values = [@name, @total_seats, @total_rows, @theatre_id]
     @id = SqlRunner.run(sql, values)[0]["id"].to_i
   end
 
   def update
     sql = "UPDATE auditoriums SET (
-      name, total_seats, total_rows
+      name, total_seats, total_rows, theatre_id
     ) = (
-      $1, $2, $3
-    ) WHERE id = $4"
-    values = [@name, @total_seats, @total_rows, @id]
+      $1, $2, $3, $4
+    ) WHERE id = $5"
+    values = [@name, @total_seats, @total_rows, @theatre_id, @id]
     SqlRunner.run(sql, values)
   end
 

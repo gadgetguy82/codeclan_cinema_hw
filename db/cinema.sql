@@ -5,11 +5,20 @@ DROP TABLE IF EXISTS auditoriums;
 DROP TABLE IF EXISTS films;
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS theatres;
+
+CREATE TABLE theatres (
+  id SERIAL8 PRIMARY KEY,
+  name VARCHAR(255),
+  address VARCHAR(255)
+);
 
 CREATE TABLE employees (
   id SERIAL8 PRIMARY KEY,
   name VARCHAR(255),
-  password VARCHAR(255)
+  password VARCHAR(255),
+  access_level INT2,
+  theatre_id INT8 REFERENCES theatres(id) ON DELETE CASCADE
 );
 
 CREATE TABLE customers (
@@ -29,7 +38,8 @@ CREATE TABLE auditoriums (
   id SERIAL8 PRIMARY KEY,
   name VARCHAR(255),
   total_seats INT4,
-  total_rows INT4
+  total_rows INT4,
+  theatre_id INT8 REFERENCES theatres(id) ON DELETE CASCADE
 );
 
 CREATE TABLE seats (

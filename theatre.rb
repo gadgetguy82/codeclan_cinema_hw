@@ -5,11 +5,39 @@ require_relative("models/screening")
 
 class Theatre
 
+  attr_reader :id
   attr_accessor :name, :address
 
   def initialize(options)
     @name = options["name"]
     @address = options["address"]
+    @id = options["id"].to_i if options["id"]
+  end
+
+  def save
+    sql = "INSERT INTO theatres (
+      name, address
+    ) VALUES (
+      $1, $2
+    ) RETURNING *"
+    values = [@name, @address]
+    @id = SqlRunner.run(sql, values)[0]["id"].to_i
+  end
+
+  def update
+    sql = "UPDATE theatres SET (
+      name, address
+    ) = (
+      $1, $2
+    ) WHERE id = $3"
+    values = [@name, @address, @id]
+    SqlRunner.run(sql, values)
+  end
+
+  def delete
+    sql = "DELETE FROM theatres WHERE id = $1"
+    values = [@id]
+    SqlRunner.run(sql, values)
   end
 
   def add_auditorium(name, total_seats = 50, total_rows = 5)
@@ -17,7 +45,8 @@ class Theatre
       {
         "name" => name,
         "total_seats" => total_seats,
-        "total_rows" => total_rows
+        "total_rows" => total_rows,
+        "theatre_id" => @id
       }
     )
     auditorium.save
@@ -54,6 +83,24 @@ class Theatre
     else
       p "Cannot add screening, #{auditorium.name} already booked"
     end
+  end
+
+  def self.all
+    sql = "SELECT * FROM theatres"
+    theatres = SqlRunner.run(sql)
+    return theatres.map{|theatre| Theatre.new(theatre)}
+  end
+
+  def self.find(id)
+    sql = "SELECT * FROM theatres WHERE id = $1"
+    values = [id]
+    theatre = SqlRunner.run(sql, values)
+    return Theatre.new(theatre)
+  end
+
+  def self.delete_all
+    sql = "DELETE FROM theatres"
+    SqlRunner.run(sql)
   end
 
   def self.select_random(array)

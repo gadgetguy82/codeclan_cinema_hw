@@ -1,6 +1,7 @@
 require("pry")
 require_relative("theatre")
 require_relative("customer_list")
+require_relative("models/employee")
 require_relative("models/customer")
 require_relative("models/film")
 require_relative("models/ticket")
@@ -14,6 +15,8 @@ Seat.delete_all
 Auditorium.delete_all
 Film.delete_all
 Customer.delete_all
+Employee.delete_all
+Theatre.delete_all
 
 odeon = Theatre.new(
   {
@@ -21,6 +24,7 @@ odeon = Theatre.new(
     "address" => "Lothian Road"
   }
 )
+odeon.save
 odeon.add_auditorium("Screen 1")
 odeon.add_auditorium("Screen 2")
 
@@ -33,6 +37,16 @@ odeon.set_price(Film.find_by_title("Jurassic Park"), 10)
 odeon.add_screening("14:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Jurassic Park"))
 odeon.add_screening("18:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Robocop"))
 odeon.add_screening("18:00", Auditorium.find_by_name("Screen 1"), Film.find_by_title("Terminator 2"))
+
+employee = Employee.new(
+  {
+    "name" => "Roger",
+    "password" => "1234",
+    "access_level" => 2,
+    "theatre_id" => odeon.id
+  }
+)
+employee.save
 
 customers = CustomerList.new(10).customers
 

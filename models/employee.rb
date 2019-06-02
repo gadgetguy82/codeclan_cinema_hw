@@ -3,31 +3,33 @@ require_relative("../db/sql_runner")
 class Employee
 
   attr_reader :id
-  attr_accessor :name, :password
+  attr_accessor :name, :password, :access_level, :theatre_id
 
   def initialize(options)
     @name = options["name"]
-    @password = options["password"].to_i
+    @password = options["password"]
+    @access_level = options["access_level"]
+    @theatre_id = options["theatre_id"]
     @id = options["id"].to_i if options["id"]
   end
 
   def save
     sql = "INSERT INTO seats (
-      name, password
+      name, password, access_level, theatre_id
     ) VALUES (
-      $1, $2
+      $1, $2, $3, $4
     ) RETURNING *"
-    values = [@name, @password]
+    values = [@name, @password, @access_level, @theatre_id]
     @id = SqlRunner.run(sql, values)[0]["id"].to_i
   end
 
   def update
     sql = "UPDATE seats SET (
-      name, password
+      name, password, access_level, theatre_id
     ) = (
-      $1, $2
-    ) WHERE id = $3"
-    values = [@name, @password, @id]
+      $1, $2, $3, $4
+    ) WHERE id = $5"
+    values = [@name, @password, @access_level, @theatre_id, @id]
     SqlRunner.run(sql, values)
   end
 
