@@ -1,6 +1,6 @@
 require("pry")
-require_relative("theatre")
 require_relative("customer_list")
+require_relative("models/theatre")
 require_relative("models/employee")
 require_relative("models/customer")
 require_relative("models/film")

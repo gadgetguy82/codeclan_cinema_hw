@@ -1,7 +1,7 @@
-require_relative("db/sql_runner")
-require_relative("models/auditorium")
-require_relative("models/film")
-require_relative("models/screening")
+require_relative("../db/sql_runner")
+require_relative("auditorium")
+require_relative("film")
+require_relative("screening")
 
 class Theatre
 
