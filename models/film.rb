@@ -69,6 +69,7 @@ class Film
     return (frequency_hash.find_all{
       |show_time, frequency| frequency == max}).map{
         |show_time, frequency| show_time}
+  end
     # -------------------------------------------------------------
     # Another way to extract the most popular screening time
     # Again only extracts the first popular time found
@@ -77,6 +78,7 @@ class Film
     # frequency_hash = show_times.reduce(Hash.new(0)){
     #   |hash, show_time| hash[show_time] += 1; hash}
     # return show_times.max_by{|value| frequency_hash[value]}
+    # end
     # -------------------------------------------------------------
     # One way to extract the most popular screening time for this
     # film, only returns the first popular time if multiples exist
@@ -92,7 +94,7 @@ class Film
     #   end
     # end
     # return show_times[tickets[tickets.max]]
-  end
+    # end
 
   def self.all
     sql = "SELECT * FROM films"
